@@ -1,0 +1,82 @@
+DROP TABLE users;
+CREATE TABLE users (
+  id     INTEGER,
+  name   CHAR(50),
+  d_id   INTEGER
+);
+INSERT INTO users VALUES (1,'Владимир',1);
+INSERT INTO users VALUES (2,'Антон',2);
+INSERT INTO users VALUES (3,'Александр',6);
+INSERT INTO users VALUES (4,'Борис',2);
+INSERT INTO users VALUES (5,'Юрий',4);
+
+
+DROP TABLE departments;
+CREATE TABLE departments (
+  id     INTEGER,
+  name   CHAR(50)
+);
+INSERT INTO departments VALUES (1,'Продажи');
+INSERT INTO departments VALUES (2,'Поддержка');
+INSERT INTO departments VALUES (3,'Финансы');
+INSERT INTO departments VALUES (4,'Логистика');
+
+SELECT U.id,
+       U.name,
+       D.name AS d_name
+FROM   users U
+       INNER JOIN departments D ON D.id = U.d_id
+	   
+1	Владимир                                          	Продажи                                           
+2	Антон                                             	Поддержка                                         
+4	Борис                                             	Поддержка                                         
+5	Юрий                                              	Логистика                                         
+
+В результате отсутствуют:
+- пользователь Александр (отдел 6 - не существует)
+- отдел Финансы (нет пользователей)
+
+
+SELECT U.id,
+       U.name,
+       D.name AS d_name
+FROM   users U
+       LEFT JOIN departments D ON D.id = U.d_id
+	 
+1	Владимир                                          	Продажи                                           
+2	Антон                                             	Поддержка                                         
+3	Александр                                         	
+4	Борис                                             	Поддержка                                         
+5	Юрий                                              	Логистика                                         
+
+ПЛЮС дополнит выборку оставшимися данными из внешней таблицы, 
+которая слева или справа
+которые по условию не подходят, заполнив недостающие данные значением NULL
+
+SELECT U.id,
+       U.name,
+       D.name AS d_name
+FROM   users U
+       RIGHT JOIN departments D ON D.id = U.d_id
+	   
+
+1	Владимир                                          	Продажи                                           
+2	Антон                                             	Поддержка                                         
+4	Борис                                             	Поддержка                                         
+		                                                Финансы                                           
+5	Юрий                                              	Логистика                                         
+
+SELECT U.id,
+       U.name,
+       D.name AS d_name
+FROM   users U
+       FULL JOIN departments D ON D.id = U.d_id
+	   
+1	Владимир                                          	Продажи                                           
+2	Антон                                             	Поддержка                                         
+3	Александр                                         	
+4	Борис                                             	Поддержка                                         
+5	Юрий                                              	Логистика                                         
+		                                                Финансы                                           
+		
+		
