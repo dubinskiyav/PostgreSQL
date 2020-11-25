@@ -1,0 +1,19 @@
+Возвращает типы полей
+
+SELECT T.relname,
+       C.attrelid,
+       C.attname, 
+       C.atttypid, 
+       C.atttypmod,
+       format_type(C.atttypid, C.atttypmod) AS type,
+       TP.* 
+FROM   pg_catalog.pg_attribute C,
+       pg_catalog.pg_class T,
+       pg_catalog.pg_authid O,
+       pg_catalog.pg_type TP
+WHERE  (C.attname = 'captable_code' OR 1=1)
+  AND  T."oid" = C.attrelid
+  AND  O.oid = T.relowner
+  AND  O.rolname = 'SYSDBA'
+  AND  TP.oid = C.atttypid 
+  AND  TP.typname = 'bpchar'
