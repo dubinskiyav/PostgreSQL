@@ -1,0 +1,71 @@
+sudo apt-cache search ".*plpython3.*"
+postgresql-plpython3-10 - PL/Python 3 procedural language for PostgreSQL 10
+
+sudo apt-get install postgresql-contrib postgresql-plpython3-10
+
+sudo systemctl stop postgresql
+https://stackoverflow.com/questions/26091390/postgresql-how-to-install-plpythonu-extension
+
+sudo systemctl start postgresql
+
+CREATE EXTENSION plpython3u
+
+SELECT *
+FROM   pg_available_extensions
+WHERE  name = 'plpython3u'
+
+plpython3u	1.0	1.0	PL/Python3U untrusted procedural language
+
+
+CREATE FUNCTION dav_test_pymax (a integer, b integer)
+  RETURNS integer
+AS $$
+  if a > b:
+    return a
+  return b
+$$ LANGUAGE plpython3u;
+
+
+
+sudo apt-cache search ".*plpythonu.*"
+postgresql-plpython-10 - PL/Python procedural language for PostgreSQL 10
+
+sudo apt-get install postgresql-contrib postgresql-plpython-10
+
+sudo systemctl stop postgresql
+sudo systemctl start postgresql
+
+CREATE EXTENSION plpythonu
+
+CREATE FUNCTION dav_test_pymax (a integer, b integer)
+  RETURNS integer
+AS $$
+  if a > b:
+    return a
+  return b
+$$ LANGUAGE plpythonu;
+
+CREATE OR REPLACE FUNCTION url2qrcode (s VARCHAR)
+  RETURNS BYTEA
+AS $$
+  return s
+$$ LANGUAGE plpythonu;
+
+SELECT url2qrcode('asfrdsgv')
+
+Pip (сокращение от Python Installs Packages) — это пакетный менеджер для языка программирования Python.
+
+sudo apt install python-pip
+
+
+pip install pillow qrcode
+
+
+CREATE OR REPLACE FUNCTION url2qrcode (s VARCHAR)
+  RETURNS BYTEA
+AS $$
+  import sys, os, qrcode
+  return qrcode.make(s)
+$$ LANGUAGE plpythonu;
+
+SELECT url2qrcode('asfrdsgv')
