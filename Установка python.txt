@@ -69,3 +69,48 @@ AS $$
 $$ LANGUAGE plpythonu;
 
 SELECT url2qrcode('asfrdsgv')
+
+pip install psycopg2
+
+
+CREATE OR REPLACE FUNCTION url2qrcode (s VARCHAR)
+  RETURNS BYTEA
+AS $$
+  import qrcode
+  from io import BytesIO
+  import base64
+  from qrcode.image.svg import SvgPathFillImage
+  img = qrcode.make(s, image_factory=qrcode.image.svg.SvgImage)
+  img.save('/tmp/qrcode.svg')
+  img = qrcode.make(s) # png
+  img.save('/tmp/qrcode.png')
+  buffered = BytesIO()
+  img.save(buffered)
+  base64_bytes = base64.b64encode(buffered.getvalue())
+  return base64_bytes
+$$ LANGUAGE plpythonu;
+
+
+CREATE EXTENSION pljava;
+
+could not open extension control file "/usr/share/postgresql/10/extension/pljava.control": No such file or directory
+SQL state: 58P01
+
+http://dbaks.blogspot.com/2016/03/pljava-postgresql-94.html
+
+git clone https://github.com/tada/pljava.git
+
+3. PostgreSQL установлен и работает
+
+pg_config
+
+если не работает устанавливаем
+
+sudo apt install libpq-dev
+
+Заходим в директорию pljava и выполняем
+ 
+mvn clean install
+
+
+pg_config --version
