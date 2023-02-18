@@ -78,16 +78,10 @@ CREATE OR REPLACE FUNCTION url2qrcode (s VARCHAR)
 AS $$
   import qrcode
   from io import BytesIO
-  import base64
-  from qrcode.image.svg import SvgPathFillImage
-  img = qrcode.make(s, image_factory=qrcode.image.svg.SvgImage)
-  img.save('/tmp/qrcode.svg')
   img = qrcode.make(s) # png
-  img.save('/tmp/qrcode.png')
   buffered = BytesIO()
   img.save(buffered)
-  base64_bytes = base64.b64encode(buffered.getvalue())
-  return base64_bytes
+  return buffered.getvalue()
 $$ LANGUAGE plpythonu;
 
 
